@@ -2,10 +2,14 @@
 	"title": "Knot 1",
 	"video_name": "video.mp4",
 	"description": "lorem ipsum",
-	"captions": {
-		// image filename: "caption"
-		"1.png": "caption for image with filename 1",
-		"2.png": "caption for image with filename 2",
-		"..."
-	}
+	"photos": [
+		{
+			"photo": "1.png",
+			"caption": "caption for image with filename 1"
+		},
+		{
+			"photo": "2.png",
+			"caption": "caption for image with filename 2"
+		}
+	]
 }

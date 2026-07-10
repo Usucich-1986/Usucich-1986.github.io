@@ -1,0 +1,207 @@
+class PageVideo {
+	constructor(page, video_url, fallback_video) {
+		this.page = page;
+		this.video_url = video_url;
+		this.fallback_video = fallback_video;
+
+		this.dom = {
+			root: undefined,
+			video: undefined,
+			video_src_1: undefined,
+			video_src_2: undefined
+		};
+	}
+
+	get_dom(force_recreate) {
+		if (force_recreate || (this.dom.root == undefined)) {
+			this.dom.root = document.createElement("div");
+			this.dom.root.classList.add("page_video_continer");
+			this.dom.root.id = `p${this.page.index}_video`;
+
+			this.dom.video = document.createElement("video");
+			this.dom.root.appendChild(this.dom.video);
+
+			this.dom.video_src_1 = document.createElement("source");
+			this.dom.video.appendChild(this.dom.video_src_1);
+
+			this.dom.video_src_2 = document.createElement("source");
+			this.dom.video.appendChild(this.dom.video_src_2);
+		}
+
+		this.update()
+		return this.dom.root;
+	}
+
+	update() {
+		if (this.dom.root != undefined) {
+			this.dom.video_src_1.src = this.video_url;
+			this.dom.video_src_2.src = this.fallback_video;
+		}
+	}
+}
+
+class PageDescription {
+	constructor(page, text) {
+		this.page = page;
+		this.text = text;
+
+		this.dom = {
+			root: undefined,
+			p: undefined
+		};
+	}
+
+	get_dom(force_recreate) {
+		if (force_recreate || (this.dom.root == undefined)) {
+			this.dom.root = document.createElement("div");
+			this.dom.root.classList.add("page_description_continer");
+			this.dom.root.id = `p${this.page.index}_desc`;
+
+			this.dom.p = document.createElement("p");
+			this.dom.root.appendChild(this.dom.p);
+		}
+
+		this.update();
+		return this.dom.root;
+	}
+
+	update() {
+		if (this.dom.root != undefined) {
+			this.dom.p.innerHTML = this.text;
+		}
+	}
+}
+
+class PageTitle {
+	constructor(page, title) {
+		this.page = page;
+		this.title = title;
+
+		this.dom = {
+			root: undefined,
+			title_h1: undefined
+		};
+	}
+
+	get_dom(force_recreate) {
+		if (force_recreate || (this.dom.root == undefined)) {
+			this.dom.root = document.createElement("div");
+			this.dom.root.classList.add("page_title_continer");
+			this.dom.root.id = `p${this.page.index}_title`;
+
+			this.dom.title_h1 = document.createElement("h1");
+			this.dom.root.appendChild(this.dom.title_h1);
+		}
+
+		this.update();
+		return this.dom.root;
+	}
+
+	update() {
+		if (this.dom.root != undefined) {
+			this.dom.title_h1.innerHTML = this.title;
+		}
+	}
+}
+
+class PagePhoto {
+	constructor(page, index, image_path, fallback_img, caption = null) {
+		this.page = page;
+		this.index = index;
+		this.image_path = image_path;
+		this.fallback_img = fallback_img;
+		this.caption = caption;
+		this._tried_to_load_fallback = false;
+
+		this.dom = {
+			root: undefined,
+			img: undefined,
+			caption_p: undefined
+		};
+	}
+
+	get_dom(force_recreate) {
+		if (force_recreate || (this.dom.root == undefined)) {
+
+			this.dom.root = document.createElement("div");
+			this.dom.root.classList.add("page_photo_continer");
+			this.dom.root.id = `p${this.page.index}_photo${this.index}`;
+
+			this.dom.img = document.createElement("img");
+			this.dom.root.appendChild(this.dom.img);
+
+			this.dom.caption_p = document.createElement("p");
+			this.dom.root.appendChild(this.dom.caption_p);
+		}
+
+		this.update();
+		return this.dom.root;
+	}
+
+	update() {
+		if (this.dom.root != undefined) {
+			this.dom.img.src = this.image_path;
+			this._tried_to_load_fallback = false;
+			this.dom.img.onerror = () => { if (!this._tried_to_load_fallback) {this.dom.img.src = this.fallback_img; this._tried_to_load_fallback = true;} };
+
+			if (this.caption == null) {
+				this.dom.caption_p.classList.add("hide");
+			} else {
+				this.dom.caption_p.classList.remove("hide");
+				this.dom.caption_p.innerHTML = this.caption;
+			}
+		}
+	}
+}
+
+class PagePhotos {
+	constructor(page, data, path_prefix, fallback_img) {
+		this.page = page;
+		this.fallback_img = fallback_img;
+
+		this.page_photo_objs = [];
+		for (let i = 0; i < data.length; i++)
+			this.page_photo_objs.push(
+				new PagePhoto(this.page, i, `${path_prefix}/${data[i].photo}`, fallback_img, data[i].caption)
+			);
+
+		this._old_page_photo_objs = undefined;
+
+		this.dom = {
+			root: undefined,
+			// TODO: fix here
+		};
+	}
+
+	get_dom(force_recreate) {
+		if (force_recreate || (this.dom.root == undefined)) {
+			this.dom.root = document.createElement("div");
+			this.dom.root.classList.add("page_photos_continer");
+			this.dom.root.id = `p${this.page.index}_photos`;
+		}
+
+		this.update();
+		return this.dom.root;
+	}
+
+	update() {
+		if (this.dom.root != undefined) {
+			if (this._old_page_photo_objs !== this.page_photo_objs) {
+				this._old_page_photo_objs = this.page_photo_objs;
+
+				// remove old childs
+				// while (this.dom.root.firstChild) {
+				// 	this.dom.root.removeChild(this.dom.root.firstChild);
+				// }
+				this.dom.root.innerHTML = ''; // Efficient way to clear children
+
+				// add updated childs
+				for (const page_photo of this.page_photo_objs)
+					this.dom.root.appendChild(page_photo.get_dom());
+			}
+		}
+	}
+}
+
+
+export { PageVideo, PageDescription, PageTitle, PagePhoto, PagePhotos };
