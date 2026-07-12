@@ -1,10 +1,9 @@
 .carousel_container {
 	width: 100%;
 	height: 100%;
-	contain: content;
 
-	transition-duration: 3s;
-	animation-duration: 1.5s;
+	contain: content;
+	transition-duration: 1.5s !important;
 }
 
 .carousel {
@@ -17,7 +16,7 @@
 	box-sizing: border-box;
 	overflow: hidden;
 
-	position: fixed;
+	position: absolute;
 	transition-duration: inherit;
 }
 
@@ -47,6 +46,7 @@
 	max-height: 90%;
 	box-sizing: border-box;
 	overflow: hidden;
+	transition-duration: inherit;
 
 	opacity: 1;
 	display: block;
@@ -57,6 +57,7 @@
 	border-radius: 2vmin;
 	background-color: #c7e3e873;
 	backdrop-filter: blur(1vmin);
+	/* filter: blur(0.1vmin); */
 	box-sizing: border-box;
 
 	position: absolute;
@@ -74,9 +75,11 @@
 }
 
 .carousel .c_slides .c_slide_main {
+	filter: blur(0);
 	z-index: 50;
 	opacity: 1;
 	left: 50%;
+	perspective: +100vmax;
 }
 
 .carousel .c_slides .c_slide_left {
@@ -125,25 +128,29 @@
 
 /* contorls */
 
-.carousel .c_constrols {
+.carousel .c_controls {
 	transition-duration: inherit;
 	z-index: 100;
 	width: 100%;
 	height: 100%;
 	display: flex;
-	position: fixed;
+	position: absolute;
 	top: 0;
 	left: 0;
 	box-sizing: border-box;
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
+	user-select: none;
+	pointer-events: none;
 
 	/* border: 3px yellow solid; */
 }
 
-.carousel .c_constrols .c_control_right,
-.carousel .c_constrols .c_control_left {
+.carousel .c_controls .c_control_right,
+.carousel .c_controls .c_control_left {
+
+	pointer-events: auto;
 	transition-duration: inherit;
 	z-index: 120;
 	display: flex;
@@ -151,29 +158,30 @@
 	align-items: center;
 	height: 100%;
 	width: 10%;
-}
-
-
-
-/* disable mouse interactions */
-.carousel .c_constrols .c_control_right,
-.carousel .c_constrols .c_control_left {
-	pointer-events: none;
-	user-select: none;
-	cursor: not-allowed;
-	cursor: move;
 	color: white;
 	font-weight: 900;
 	font-size: 5vmin;
 }
 
-.carousel .c_constrols .c_control_right {
+
+
+/* disable mouse interactions */
+.carousel .c_controls .c_control_right,
+.carousel .c_controls .c_control_left {
+	user-select: none;
+	cursor: not-allowed;
+	cursor: grab;
+}
+
+.carousel .c_controls .c_control_right {
 	/* border: 1px red solid; */
+	order: 1;
 	background: linear-gradient(-90deg, #0004, #fff0);
 }
 
-.carousel .c_constrols .c_control_left {
+.carousel .c_controls .c_control_left {
 	/* border: 1px red solid; */
+	order: 0;
 	background: linear-gradient(90deg, #0004, #fff0);
 }
 
@@ -181,7 +189,7 @@
 
 /* dotted_timeline */
 
-.carousel .c_timeline{
+.carousel .c_timeline {
 	transition-duration: inherit;
 	position: absolute;
 	transform: translate(-50%, 50%);
@@ -190,7 +198,8 @@
 
 	box-sizing: border-box;
 	height: min-content;
-	max-width: 30vmin;
+	width: min-content;
+	/* max-width: 30vmin; */
 
 	display: flex;
 	flex-direction: row;
@@ -199,20 +208,21 @@
 
 }
 
-.carousel .c_timeline .ct_dots{
+.carousel .c_timeline .ct_dots {
 	transition-duration: inherit;
 	box-sizing: border-box;
-	width: 2vmin;
-	height: 2vmin;
+	width: 1.5vmin;
+	aspect-ratio: 1;
 	content: " ";
 	border: 0.1vmin solid white;
 	background-color: #babaca55;
 	border-radius: 100%;
 	margin: 0 1vmin;
-	box-shadow: #3338 0 0 2vmin 0vmin;
-	
+	box-shadow: #3339 0 0 1.5vmin 0.05vmin;
+
 }
 
-.carousel .c_timeline .ct_dots.checked{
+.carousel .c_timeline .ct_dots.checked {
 	background-color: rgba(255, 255, 255, 0.9);
+	box-shadow: #0009 0 0 1.5vmin 0.15vmin;
 }

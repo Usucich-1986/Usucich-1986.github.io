@@ -1,4 +1,5 @@
 import MAIN_CONFIG from "../../config.js";
+import Carousel from "./carousel.js";
 import { Page } from "./page.js";
 
 
@@ -55,8 +56,6 @@ class App {
 			document.body.appendChild(this.dom.root);
 		}
 	}
-
-
 }
 
 // window.onload = async () => {
@@ -65,3 +64,16 @@ class App {
 // 	app.create_dom();
 // 	window.app = app;
 // };
+
+
+window.c = new Carousel(document.getElementsByClassName("carousel_container")[0], true, true);
+for(var i = 0; i < 10; i++){
+	var d = document.createElement("h1");
+	d.innerText = "Slide" + i + "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut velit vitae dolores, quasi asperiores culpa accusantium a quas assumenda omnis natus sunt laborum harum placeat id vel dolorum ea tempora. Magni assumenda quae, deserunt vero natus nostrum ipsa consequuntur dolores vel dicta unde maxime nulla incidunt molestiae quia, ab libero. Tenetur, temporibus, neque qui sint suscipit, repellendus cupiditate earum reiciendis libero nam quasi. Quo ad illo incidunt magni ex ratione iure, consequatur debitis accusantium inventore nihil accusamus pariatur ea exercitationem blanditiis sequi minus adipisci. Doloribus tempore fugiat explicabo iusto facilis incidunt voluptates quam perspiciatis. Quo fugiat natus numquam cum illo.";
+	var h = document.createElement("div");
+	h.appendChild(d);
+	h.style.width = "100%";
+	h.style.height = "100%";
+	h.style.overflowY = "auto";
+	window.c.add_slide_dom(h);
+}
