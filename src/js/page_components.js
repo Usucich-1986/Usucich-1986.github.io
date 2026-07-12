@@ -15,7 +15,7 @@ class PageVideo {
 	get_dom(force_recreate) {
 		if (force_recreate || (this.dom.root == undefined)) {
 			this.dom.root = document.createElement("div");
-			this.dom.root.classList.add("page_video_continer");
+			this.dom.root.classList.add("page_video_container");
 			this.dom.root.id = `p${this.page.index}_video`;
 
 			this.dom.video = document.createElement("video");
@@ -54,7 +54,7 @@ class PageDescription {
 	get_dom(force_recreate) {
 		if (force_recreate || (this.dom.root == undefined)) {
 			this.dom.root = document.createElement("div");
-			this.dom.root.classList.add("page_description_continer");
+			this.dom.root.classList.add("page_description_container");
 			this.dom.root.id = `p${this.page.index}_desc`;
 
 			this.dom.p = document.createElement("p");
@@ -86,7 +86,7 @@ class PageTitle {
 	get_dom(force_recreate) {
 		if (force_recreate || (this.dom.root == undefined)) {
 			this.dom.root = document.createElement("div");
-			this.dom.root.classList.add("page_title_continer");
+			this.dom.root.classList.add("page_title_container");
 			this.dom.root.id = `p${this.page.index}_title`;
 
 			this.dom.title_h1 = document.createElement("h1");
@@ -124,7 +124,7 @@ class PagePhoto {
 		if (force_recreate || (this.dom.root == undefined)) {
 
 			this.dom.root = document.createElement("div");
-			this.dom.root.classList.add("page_photo_continer");
+			this.dom.root.classList.add("page_photo_container");
 			this.dom.root.id = `p${this.page.index}_photo${this.index}`;
 
 			this.dom.img = document.createElement("img");
@@ -176,7 +176,7 @@ class PagePhotos {
 	get_dom(force_recreate) {
 		if (force_recreate || (this.dom.root == undefined)) {
 			this.dom.root = document.createElement("div");
-			this.dom.root.classList.add("page_photos_continer");
+			this.dom.root.classList.add("page_photos_container");
 			this.dom.root.id = `p${this.page.index}_photos`;
 		}
 

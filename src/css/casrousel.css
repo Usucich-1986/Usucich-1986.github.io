@@ -1,0 +1,218 @@
+.carousel_container {
+	width: 100%;
+	height: 100%;
+	contain: content;
+
+	transition-duration: 3s;
+	animation-duration: 1.5s;
+}
+
+.carousel {
+	width: 100%;
+	height: 100%;
+	min-width: 100%;
+	min-height: 100%;
+	max-width: 100%;
+	max-height: 100%;
+	box-sizing: border-box;
+	overflow: hidden;
+
+	position: fixed;
+	transition-duration: inherit;
+}
+
+/* slides */
+
+.carousel .c_slides {
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	width: 100%;
+	height: 100%;
+	min-width: min-content;
+	min-height: min-content;
+	max-width: 100%;
+	max-height: 100%;
+	box-sizing: border-box;
+
+	transition-duration: inherit;
+	perspective: 100vmax;
+}
+
+/* slides -> a slide */
+
+.carousel .c_slides .c_slide {
+	height: 100%;
+	max-height: 90%;
+	box-sizing: border-box;
+	overflow: hidden;
+
+	opacity: 1;
+	display: block;
+	width: 85%;
+	transform: none;
+	box-shadow: #3338 0 0 2.5vmin -0.25vmin;
+	border: #7767 2px solid;
+	border-radius: 2vmin;
+	background-color: #c7e3e873;
+	backdrop-filter: blur(1vmin);
+	box-sizing: border-box;
+
+	position: absolute;
+	top: 50%;
+	left: 0;
+	z-index: 10;
+
+	transform-style: preserve-3d;
+	transform: translate(-50%, -50%);
+}
+
+.carousel .c_slides .c_slide_hidden {
+	display: none;
+	opacity: 0;
+}
+
+.carousel .c_slides .c_slide_main {
+	z-index: 50;
+	opacity: 1;
+	left: 50%;
+}
+
+.carousel .c_slides .c_slide_left {
+	z-index: 40;
+	left: 10%;
+	opacity: .75;
+	transform: translate(-50%, -50%) rotateY(60grad);
+}
+
+.carousel .c_slides .c_slide_right {
+	z-index: 40;
+	opacity: .75;
+	transform: translate(-50%, -50%) rotateY(-60grad);
+	left: 90%;
+}
+
+
+.carousel .c_slides .c_slide_left_2 {
+	z-index: 30;
+	opacity: .25;
+	transform: translate(-50%, -50%) rotateY(90grad);
+	left: -50%;
+}
+
+.carousel .c_slides .c_slide_right_2 {
+	z-index: 30;
+	opacity: .25;
+	transform: translate(-50%, -50%) rotateY(-90grad);
+	left: 150%;
+}
+
+
+/* disable mouse interactions */
+/* .carousel .c_slides .c_slide_main, */
+.carousel .c_slides .c_slide_hidden,
+.carousel .c_slides .c_slide_left,
+.carousel .c_slides .c_slide_left_2,
+.carousel .c_slides .c_slide_right,
+.carousel .c_slides .c_slide_right_2 {
+	pointer-events: none;
+	user-select: none;
+	cursor: not-allowed;
+}
+
+/* slides:end */
+
+/* contorls */
+
+.carousel .c_constrols {
+	transition-duration: inherit;
+	z-index: 100;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	position: fixed;
+	top: 0;
+	left: 0;
+	box-sizing: border-box;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+
+	/* border: 3px yellow solid; */
+}
+
+.carousel .c_constrols .c_control_right,
+.carousel .c_constrols .c_control_left {
+	transition-duration: inherit;
+	z-index: 120;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	width: 10%;
+}
+
+
+
+/* disable mouse interactions */
+.carousel .c_constrols .c_control_right,
+.carousel .c_constrols .c_control_left {
+	pointer-events: none;
+	user-select: none;
+	cursor: not-allowed;
+	cursor: move;
+	color: white;
+	font-weight: 900;
+	font-size: 5vmin;
+}
+
+.carousel .c_constrols .c_control_right {
+	/* border: 1px red solid; */
+	background: linear-gradient(-90deg, #0004, #fff0);
+}
+
+.carousel .c_constrols .c_control_left {
+	/* border: 1px red solid; */
+	background: linear-gradient(90deg, #0004, #fff0);
+}
+
+/* controls:end */
+
+/* dotted_timeline */
+
+.carousel .c_timeline{
+	transition-duration: inherit;
+	position: absolute;
+	transform: translate(-50%, 50%);
+	bottom: 2.5%;
+	left: 50%;
+
+	box-sizing: border-box;
+	height: min-content;
+	max-width: 30vmin;
+
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	align-items: center;
+
+}
+
+.carousel .c_timeline .ct_dots{
+	transition-duration: inherit;
+	box-sizing: border-box;
+	width: 2vmin;
+	height: 2vmin;
+	content: " ";
+	border: 0.1vmin solid white;
+	background-color: #babaca55;
+	border-radius: 100%;
+	margin: 0 1vmin;
+	box-shadow: #3338 0 0 2vmin 0vmin;
+	
+}
+
+.carousel .c_timeline .ct_dots.checked{
+	background-color: rgba(255, 255, 255, 0.9);
+}
