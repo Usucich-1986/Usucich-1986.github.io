@@ -39,7 +39,7 @@ export class Page {
 			this.title.update();
 			this.video.update();
 			this.description.update();
-			this.photos.update();
+			// this.photos.update(); // have no update
 		}
 	}
 }

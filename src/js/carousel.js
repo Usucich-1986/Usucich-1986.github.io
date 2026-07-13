@@ -32,8 +32,17 @@ class C_Slides {
 
 
 	set_current(index) {
-		var rm_class = (i, pclass) => { this.c_slide_objs[i].get_dom().classList.remove(pclass); this.c_slide_objs[i].get_dom().classList.add("c_slide_hidden"); };
-		var add_class = (i, pclass) => { this.c_slide_objs[i].get_dom().classList.remove("c_slide_hidden"); this.c_slide_objs[i].get_dom().classList.add(pclass); };
+		var rm_class = (i, pclass) => {
+			this.c_slide_objs[i].get_dom().classList.remove(pclass);
+			this.c_slide_objs[i].get_dom().classList.add("c_slide_hidden");
+			this.c_slide_objs[i].get_dom().inert = true;
+		};
+		var add_class = (i, pclass) => {
+			this.c_slide_objs[i].get_dom().classList.remove("c_slide_hidden");
+			this.c_slide_objs[i].get_dom().classList.add(pclass);
+			if (pclass == "c_slide_main")
+				this.c_slide_objs[i].get_dom().inert = false;
+		};
 		var rm_all_c = (i) => {
 			var cl = this.c_slide_objs[i].get_dom().classList;
 			cl.remove("c_slide_main");
@@ -42,6 +51,7 @@ class C_Slides {
 			cl.remove("c_slide_right");
 			cl.remove("c_slide_right_2");
 			cl.add("c_slide_hidden");
+			this.c_slide_objs[i].get_dom().inert = true;
 		};
 		var il = (ind) => (ind + slides_count) % slides_count;
 
@@ -110,7 +120,6 @@ class C_Slides {
 		if (slides_count != 0) {
 			if ((0 <= index) && (index < slides_count)) {
 				// jump_to(index);
-
 				var dif = index - this._current;
 				if (Math.abs(dif) != 1 || slides_count < 6)
 					jump_to(index);
@@ -239,7 +248,7 @@ class C_Controls {
 	}
 
 	_register_event_listeners() {
-		addEventListener("keyup", this._event_parser.bind(this));
+		this.key_ev_listener = addEventListener("keyup", this._event_parser.bind(this));
 		this._dom.right.onclick = (e) => this._next();
 		this._dom.left.onclick = (e) => this._prev();
 
@@ -402,7 +411,7 @@ class Carousel {
 		style = undefined,
 		parent = undefined,
 	) {
-		this.parent = parent ? parent : new CarouselContainer();
+		this.parent = parent ? parent : new CarouselContainer(style);
 		this.style = style;
 
 		this.c_slides = new C_Slides();

@@ -1,3 +1,5 @@
+import { Carousel } from "./carousel.js";
+
 class PageVideo {
 	constructor(page, video_url, fallback_video) {
 		this.page = page;
@@ -20,6 +22,9 @@ class PageVideo {
 
 			this.dom.video = document.createElement("video");
 			this.dom.root.appendChild(this.dom.video);
+			this.dom.video.autoplay = false;
+			this.dom.video.controls = true;
+
 
 			this.dom.video_src_1 = document.createElement("source");
 			this.dom.video.appendChild(this.dom.video_src_1);
@@ -116,6 +121,7 @@ class PagePhoto {
 		this.dom = {
 			root: undefined,
 			img: undefined,
+			img_div: undefined,
 			caption_p: undefined
 		};
 	}
@@ -127,8 +133,11 @@ class PagePhoto {
 			this.dom.root.classList.add("page_photo_container");
 			this.dom.root.id = `p${this.page.index}_photo${this.index}`;
 
-			this.dom.img = document.createElement("img");
-			this.dom.root.appendChild(this.dom.img);
+			// this.dom.img = document.createElement("img");
+			// this.dom.root.appendChild(this.dom.img);
+			this.dom.img_div = document.createElement("div");
+			this.dom.img_div.classList.add("img_div");
+			this.dom.root.appendChild(this.dom.img_div);
 
 			this.dom.caption_p = document.createElement("p");
 			this.dom.root.appendChild(this.dom.caption_p);
@@ -140,9 +149,11 @@ class PagePhoto {
 
 	update() {
 		if (this.dom.root != undefined) {
-			this.dom.img.src = this.image_path;
-			this._tried_to_load_fallback = false;
-			this.dom.img.onerror = () => { if (!this._tried_to_load_fallback) {this.dom.img.src = this.fallback_img; this._tried_to_load_fallback = true;} };
+			// this.dom.img.src = this.image_path;
+			// this._tried_to_load_fallback = false;
+			// this.dom.img.onerror = () => { if (!this._tried_to_load_fallback) { this.dom.img.src = this.fallback_img; this._tried_to_load_fallback = true; } };
+			this.dom.root.style.setProperty("--img-url", `url("${this.image_path}")`);
+			this.dom.root.style.setProperty("--fallback-img-url", `url("${this.fallback_img}")`);
 
 			if (this.caption == null) {
 				this.dom.caption_p.classList.add("hide");
@@ -158,6 +169,7 @@ class PagePhotos {
 	constructor(page, data, path_prefix, fallback_img) {
 		this.page = page;
 		this.fallback_img = fallback_img;
+		this.carousel = new Carousel(true, true);
 
 		this.page_photo_objs = [];
 		for (let i = 0; i < data.length; i++)
@@ -165,41 +177,23 @@ class PagePhotos {
 				new PagePhoto(this.page, i, `${path_prefix}/${data[i].photo}`, fallback_img, data[i].caption)
 			);
 
-		this._old_page_photo_objs = undefined;
-
 		this.dom = {
 			root: undefined,
-			// TODO: fix here
 		};
 	}
 
-	get_dom(force_recreate) {
-		if (force_recreate || (this.dom.root == undefined)) {
+	get_dom() {
+		if (this.dom.root == undefined) {
 			this.dom.root = document.createElement("div");
 			this.dom.root.classList.add("page_photos_container");
 			this.dom.root.id = `p${this.page.index}_photos`;
-		}
 
-		this.update();
+			this.dom.root.appendChild(this.carousel.get_parent_node());
+
+			for (const page of this.page_photo_objs)
+				this.carousel.add_slide_dom(page.get_dom());
+		}
 		return this.dom.root;
-	}
-
-	update() {
-		if (this.dom.root != undefined) {
-			if (this._old_page_photo_objs !== this.page_photo_objs) {
-				this._old_page_photo_objs = this.page_photo_objs;
-
-				// remove old childs
-				// while (this.dom.root.firstChild) {
-				// 	this.dom.root.removeChild(this.dom.root.firstChild);
-				// }
-				this.dom.root.innerHTML = ''; // Efficient way to clear children
-
-				// add updated childs
-				for (const page_photo of this.page_photo_objs)
-					this.dom.root.appendChild(page_photo.get_dom());
-			}
-		}
 	}
 }
 
