@@ -140,9 +140,9 @@ class C_Slide {
 
 		this._dom = document.createElement("div");
 		this._dom.classList.add("c_slide");
-		if (typeof(this._inner_dom) == "string") {
+		if (typeof (this._inner_dom) == "string") {
 			this._dom.innerHTML = this._inner_dom;
-		}else{
+		} else {
 			this._dom.appendChild(this._inner_dom);
 		}
 	}
@@ -205,7 +205,7 @@ class C_Controls {
 			var dx = this._mouse.end.x - this._mouse.start.x, dy = this._mouse.end.y - this._mouse.start.y;
 			var dist = Math.hypot(dx, dy), angle = Math.asin(dy / dist);
 			const PI_6 = Math.PI / 6;
-			console.log(dx, dy, angle, dist);
+			// console.log(dx, dy, angle, dist);
 
 			if ((dist > this._mouse.threshold) && (-PI_6 < angle) && (angle < PI_6)) {
 				if (dx < 0) {
@@ -224,7 +224,7 @@ class C_Controls {
 			var dx = this._touch.end.x - this._touch.start.x, dy = this._touch.end.y - this._touch.start.y;
 			var dist = Math.hypot(dx, dy), angle = Math.asin(dy / dist);
 			const PI_6 = Math.PI / 6;
-			console.log(dx, dy, angle, dist);
+			// console.log(dx, dy, angle, dist);
 
 			if ((dist > this._touch.threshold) && (-PI_6 < angle) && (angle < PI_6)) {
 				if (dx < 0) {
@@ -264,22 +264,16 @@ class C_Controls {
 			this._touch.start.x = e.changedTouches[0].screenX;
 			this._touch.start.y = e.changedTouches[0].screenY;
 			this._touch.start_side = "right";
-			console.log(e);
-
 		});
 		this._dom.left.addEventListener("touchstart", (e) => {
 			this._touch.start.x = e.changedTouches[0].screenX;
 			this._touch.start.y = e.changedTouches[0].screenY;
 			this._touch.start_side = "left";
-			console.log(e);
-
 		});
 		this._dom.root.addEventListener("touchend", (e) => {
 			this._touch.end.x = e.changedTouches[0].screenX;
 			this._touch.end.y = e.changedTouches[0].screenY;
 			this._process_touch_gesture();
-			console.log(e);
-
 		});
 	}
 
@@ -337,12 +331,83 @@ class C_Timeline {
 	}
 }
 
+class CarouselContainer {
+	constructor(
+		style = {
+			dark_theme: {
+				all: false, // undefined, true, false
+				slides: false,
+				controls: false,
+				timeline: false
+			},
+			scroll_vertical: false
+		}
+	) {
+		// methods
+		this.dark_all = (value = undefined) => this._alter_class("carousel_theme_dark", value);
+		this.dark_slides = (value = undefined) => this._alter_class("carousel_theme_dark_slides", value);
+		this.dark_controls = (value = undefined) => this._alter_class("carousel_theme_dark_controls", value);
+		this.dark_timeline = (value = undefined) => this._alter_class("carousel_theme_dark_timeline", value);
+		this.scroll_vertical = (value = undefined) => this._alter_class("carousel_scroll_vertical", value);
+
+		this.dom = document.createElement("div");
+		this.dom.classList.add("carousel_container");
+
+		this.set_style(style);
+	}
+
+	_toggle_class(tclass) {
+		const cl = this.dom.classList;
+		if (cl.contains(tclass))
+			cl.remove(tclass);
+		else
+			cl.add(tclass);
+	}
+
+	_alter_class(tclass, value = undefined) {
+		if (value == undefined)
+			this._toggle_class(tclass);
+		else
+			if (value && !this.dom.classList.contains(tclass))
+				this.dom.classList.add(tclass);
+			else if (!value && this.dom.classList.contains(tclass))
+				this.dom.classList.remove(tclass);
+	}
+
+	get_dom() { return this.dom; }
+
+	set_style(
+		style = {
+			dark_theme: {
+				all: false, // undefined, true, false
+				slides: false,
+				controls: false,
+				timeline: false
+			},
+			scroll_vertical: false
+		}
+	) {
+		this.dark_all(style?.dark_theme?.all || false);
+		this.dark_slides(style?.dark_theme?.slides || false);
+		this.dark_controls(style?.dark_theme?.controls || false);
+		this.dark_timeline(style?.dark_theme?.timeline || false);
+		this.scroll_vertical(style?.scroll_vertical || false);
+	}
+}
+
 class Carousel {
-	constructor(parent_node, show_controls = true, show_timeline = true) {
-		this.parent_node = parent_node;
+	constructor(
+		show_controls = true,
+		show_timeline = true,
+		style = undefined,
+		parent = undefined,
+	) {
+		this.parent = parent ? parent : new CarouselContainer();
+		this.style = style;
+
 		this.c_slides = new C_Slides();
-		this.c_timeline = new C_Timeline(this.c_slides);
-		this.c_controls = new C_Controls(this.c_slides);
+		this.c_timeline = show_timeline ? new C_Timeline(this.c_slides) : undefined;
+		this.c_controls = show_controls ? new C_Controls(this.c_slides) : undefined;
 
 		this.dom = {
 			root: undefined,
@@ -351,7 +416,12 @@ class Carousel {
 			timeline: undefined
 		}
 
-		parent_node.appendChild(this._create_dom());
+		if (this.parent instanceof CarouselContainer)
+			this.parent.get_dom().appendChild(this._create_dom());
+		else if (this.parent instanceof Node)
+			this.parent.appendChild(this._create_dom());
+		else
+			throw new Error("Invalid parent: " + this.parent);
 	}
 
 	add_slide_dom(dom) {
@@ -379,6 +449,14 @@ class Carousel {
 
 		return this.dom.root;
 	}
+
+	get_parent() {
+		return this.parent
+	}
+
+	get_parent_node() {
+		return this.parent instanceof CarouselContainer ? this.parent.get_dom() : this.parent;
+	}
 }
 
-export default Carousel;
+export { Carousel, CarouselContainer };

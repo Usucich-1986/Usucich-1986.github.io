@@ -1,79 +1,59 @@
 import MAIN_CONFIG from "../../config.js";
-import Carousel from "./carousel.js";
+import {Carousel, CarouselContainer} from "./carousel.js";
 import { Page } from "./page.js";
 
 
 class App {
-	constructor() {
+	constructor(auto_init = true) {
 		this.pages = [];
 		this.glide_obj = undefined;
-		this.g_slider = undefined;
+		this.carousel = new Carousel();
+		this.load_complete = false;
 
 		this.dom = {
-			root: undefined,
-			glide: undefined,
-			g_slides: undefined,
-			g_arrows: undefined
+			root: document.createElement("div"),
+			carousel_container: this.carousel.get_parent_node()
 		};
+		this.dom.root.classList.add("app_root");
+		this.dom.root.appendChild(this.dom.carousel_container);
+		document.body.appendChild(this.dom.root);
+
+		if (auto_init) {
+			var auto_init_fn = async () => {
+				if (document.readyState == "complete") {
+					console.log("App: init timeout: start");
+
+					await this.load_and_gen_pages();
+
+					console.log("App: init timeout: complete!");
+					return;
+				}
+				this._int_id = window.setTimeout(auto_init_fn.bind(this), 100);
+			};
+			auto_init_fn();
+		}
 	}
 
-	// Call this after instantiating App
-	async initialize() {
-		if (this.pages.length == 0) {
+	// Call this after creating App instance (only if auto_init is flase), runs only once
+	async load_and_gen_pages() {
+		if (!this.load_complete) {
+			var config, page_path, page;
 			for (var i = 0; i < MAIN_CONFIG.pages.length; i++) {
-				var config = await load_json(MAIN_CONFIG.pages[i]);
-				var page_path = MAIN_CONFIG.pages[i].split("/");
+				config = await load_json(MAIN_CONFIG.pages[i]);
+				page_path = MAIN_CONFIG.pages[i].split("/");
 				page_path.pop();
 				page_path = page_path.join("/");
 
-				this.pages.push(new Page(i, config, page_path));
+				page = new Page(i, config, page_path);
+				this.carousel.add_slide_dom(page.get_dom());
+				this.pages.push(page);
 			}
-		}
-	}
-
-
-	create_dom() {
-		if (this.dom.root == undefined) {
-			this.dom.root = document.createElement("div");
-			this.dom.root.classList.add("app_root");
-
-			this.dom.glide = document.createElement("div");
-			this.dom.glide.classList.add("glide");
-			this.dom.root.appendChild(this.dom.glide);
-
-			this.dom.g_slides = document.createElement("div");
-			this.dom.g_slides.classList.add("glide__slides");
-			this.dom.glide.appendChild(this.dom.g_slides);
-
-			var gs;
-			for (const page of this.pages) {
-				gs = document.createElement("div");
-				gs.classList.add("glide__slide");
-				gs.appendChild(page.get_dom());
-				this.dom.g_slides.appendChild(gs);
-			}
-
-			document.body.appendChild(this.dom.root);
+			this.load_complete = true;
 		}
 	}
 }
 
-// window.onload = async () => {
-// 	const app = new App();
-// 	await app.initialize();
-// 	app.create_dom();
-// 	window.app = app;
-// };
-
-
-window.c = new Carousel(document.getElementsByClassName("carousel_container")[0], true, true);
-for(var i = 0; i < 10; i++){
-	var d = document.createElement("h1");
-	d.innerText = "Slide" + i + "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut velit vitae dolores, quasi asperiores culpa accusantium a quas assumenda omnis natus sunt laborum harum placeat id vel dolorum ea tempora. Magni assumenda quae, deserunt vero natus nostrum ipsa consequuntur dolores vel dicta unde maxime nulla incidunt molestiae quia, ab libero. Tenetur, temporibus, neque qui sint suscipit, repellendus cupiditate earum reiciendis libero nam quasi. Quo ad illo incidunt magni ex ratione iure, consequatur debitis accusantium inventore nihil accusamus pariatur ea exercitationem blanditiis sequi minus adipisci. Doloribus tempore fugiat explicabo iusto facilis incidunt voluptates quam perspiciatis. Quo fugiat natus numquam cum illo.";
-	var h = document.createElement("div");
-	h.appendChild(d);
-	h.style.width = "100%";
-	h.style.height = "100%";
-	h.style.overflowY = "auto";
-	window.c.add_slide_dom(h);
-}
+window.onload = async () => {
+	const app = new App(true);
+	window.app = app;
+};
