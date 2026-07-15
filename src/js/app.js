@@ -17,6 +17,15 @@ class App {
 			carousel_container: this.carousel.get_parent_node()
 		};
 		this.dom.root.classList.add("app_root");
+
+		if (isMobileDevice() || true) {
+			const isDS = isDeviceSlow();
+			if (isDeviceSlow()) {// micro benchmark
+				this.dom.root.classList.add("slow_device");
+				console.warn("Mobile SLOW device. Using simple effects.");
+			} else
+				console.log("Mobile fast device. Using full effects");
+		}
 		this.dom.root.appendChild(this.dom.carousel_container);
 		document.body.appendChild(this.dom.root);
 

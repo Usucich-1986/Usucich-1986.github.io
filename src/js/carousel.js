@@ -184,13 +184,13 @@ class C_Controls {
 			start_side: undefined,
 			start: { x: 0, y: 0 },
 			end: { x: 0, y: 0 },
-			threshold: Math.min(window.innerWidth, window.innerHeight) * 0.25
+			threshold_coeff: 0.25
 		};
 		this._touch = {
 			start_side: undefined,
 			start: { x: 0, y: 0 },
 			end: { x: 0, y: 0 },
-			threshold: Math.min(window.innerWidth, window.innerHeight) * 0.35
+			threshold_coeff: 0.15
 		};
 	}
 
@@ -212,11 +212,22 @@ class C_Controls {
 	_process_mouse_gesture() {
 		if (this._mouse.start_side != undefined) {
 			var dx = this._mouse.end.x - this._mouse.start.x, dy = this._mouse.end.y - this._mouse.start.y;
-			var dist = Math.hypot(dx, dy), angle = Math.asin(dy / dist);
-			const PI_6 = Math.PI / 6;
-			// console.log(dx, dy, angle, dist);
+			var threshold;
 
-			if ((dist > this._mouse.threshold) && (-PI_6 < angle) && (angle < PI_6)) {
+			if (this.c_slides.get_dom()?.parentNode?.parentNode?.className.includes("vertical")) { // swap logic for vertical;
+				var dt = dx; dx = dy; dy = dt;
+				threshold = this._dom.root.clientHeight;
+			} else if (this.c_slides.get_dom()?.parentNode?.parentNode?.className) { // logic for horizontal
+				threshold = this._dom.root.clientWidth;
+			} else { // fallback logic
+				threshold = Math.min(this._dom.root.clientWidth, this._dom.root.clientHeight);
+			}
+
+			var dist = Math.hypot(dx, dy), angle = Math.asin(dy / dist);
+			threshold = threshold * this._mouse.threshold_coeff;
+
+			const PI_6 = Math.PI / 5;
+			if ((dist > threshold) && (-PI_6 < angle) && (angle < PI_6)) {
 				if (dx < 0) {
 					this._next();
 				} else {
@@ -231,43 +242,53 @@ class C_Controls {
 	_process_touch_gesture() {
 		if (this._touch.start_side != undefined) {
 			var dx = this._touch.end.x - this._touch.start.x, dy = this._touch.end.y - this._touch.start.y;
-			var dist = Math.hypot(dx, dy), angle = Math.asin(dy / dist);
-			const PI_6 = Math.PI / 6;
-			// console.log(dx, dy, angle, dist);
+			var threshold;
 
-			if ((dist > this._touch.threshold) && (-PI_6 < angle) && (angle < PI_6)) {
+			if (this.c_slides.get_dom()?.parentNode?.parentNode?.className.includes("vertical")) { // swap logic for vertical;
+				var dt = dx; dx = dy; dy = dt;
+				threshold = this._dom.root.clientHeight;
+			} else if (this.c_slides.get_dom()?.parentNode?.parentNode?.className) { // logic for horizontal
+				threshold = this._dom.root.clientWidth;
+			} else { // fallback logic
+				threshold = Math.min(this._dom.root.clientWidth, this._dom.root.clientHeight);
+			}
+
+			var dist = Math.hypot(dx, dy), angle = Math.asin(dy / dist);
+			threshold = threshold * this._touch.threshold_coeff;
+
+			const PI_6 = Math.PI / 5;
+			if ((dist > threshold) && (-PI_6 < angle) && (angle < PI_6)) {
 				if (dx < 0) {
 					this._next();
 				} else {
 					this._prev();
 				}
 			}
-
 			this._touch.start_side = undefined;
 		}
 	}
 
 	_register_event_listeners() {
-		this.key_ev_listener = addEventListener("keyup", this._event_parser.bind(this));
+		// this.key_ev_listener = addEventListener("keyup", this._event_parser.bind(this));
 		this._dom.right.onclick = (e) => this._next();
 		this._dom.left.onclick = (e) => this._prev();
 
 
-		this._dom.right.addEventListener("mousedown", (e) => {
-			this._mouse.start.x = e.screenX;
-			this._mouse.start.y = e.screenY;
-			this._mouse.start_side = "right";
-		});
-		this._dom.left.addEventListener("mousedown", (e) => {
-			this._mouse.start.x = e.screenX;
-			this._mouse.start.y = e.screenY;
-			this._mouse.start_side = "left";
-		});
-		this._dom.root.addEventListener("mouseup", (e) => {
-			this._mouse.end.x = e.screenX;
-			this._mouse.end.y = e.screenY;
-			this._process_mouse_gesture();
-		});
+		// this._dom.right.addEventListener("mousedown", (e) => {
+		// 	this._mouse.start.x = e.screenX;
+		// 	this._mouse.start.y = e.screenY;
+		// 	this._mouse.start_side = "right";
+		// });
+		// this._dom.left.addEventListener("mousedown", (e) => {
+		// 	this._mouse.start.x = e.screenX;
+		// 	this._mouse.start.y = e.screenY;
+		// 	this._mouse.start_side = "left";
+		// });
+		// this._dom.root.addEventListener("mouseup", (e) => {
+		// 	this._mouse.end.x = e.screenX;
+		// 	this._mouse.end.y = e.screenY;
+		// 	this._process_mouse_gesture();
+		// });
 
 		this._dom.right.addEventListener("touchstart", (e) => {
 			this._touch.start.x = e.changedTouches[0].screenX;

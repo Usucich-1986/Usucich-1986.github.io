@@ -24,6 +24,7 @@ class PageVideo {
 			this.dom.root.appendChild(this.dom.video);
 			this.dom.video.autoplay = false;
 			this.dom.video.controls = true;
+			this.dom.video.loading = "lazy";
 
 
 			this.dom.video_src_1 = document.createElement("source");
@@ -120,8 +121,8 @@ class PagePhoto {
 
 		this.dom = {
 			root: undefined,
-			img: undefined,
-			img_div: undefined,
+			bg_img: undefined,
+			fg_img: undefined,
 			caption_p: undefined
 		};
 	}
@@ -133,11 +134,15 @@ class PagePhoto {
 			this.dom.root.classList.add("page_photo_container");
 			this.dom.root.id = `p${this.page.index}_photo${this.index}`;
 
-			// this.dom.img = document.createElement("img");
-			// this.dom.root.appendChild(this.dom.img);
-			this.dom.img_div = document.createElement("div");
-			this.dom.img_div.classList.add("img_div");
-			this.dom.root.appendChild(this.dom.img_div);
+			this.dom.bg_img = document.createElement("img");
+			this.dom.bg_img.loading = "lazy";
+			this.dom.bg_img.classList.add("bg_img");
+			this.dom.root.appendChild(this.dom.bg_img);
+
+			this.dom.fg_img = document.createElement("img");
+			this.dom.fg_img.loading = "lazy";
+			this.dom.fg_img.classList.add("fg_img")
+			this.dom.root.appendChild(this.dom.fg_img);
 
 			this.dom.caption_p = document.createElement("p");
 			this.dom.root.appendChild(this.dom.caption_p);
@@ -149,11 +154,15 @@ class PagePhoto {
 
 	update() {
 		if (this.dom.root != undefined) {
-			// this.dom.img.src = this.image_path;
-			// this._tried_to_load_fallback = false;
-			// this.dom.img.onerror = () => { if (!this._tried_to_load_fallback) { this.dom.img.src = this.fallback_img; this._tried_to_load_fallback = true; } };
-			this.dom.root.style.setProperty("--img-url", `url("${this.image_path}")`);
-			this.dom.root.style.setProperty("--fallback-img-url", `url("${this.fallback_img}")`);
+			this.dom.bg_img.src = this.image_path;
+			this._tried_to_load_fallback = false;
+			this.dom.bg_img.onerror = () => { if (!this._tried_to_load_fallback) { this.dom.bg_img.src = this.fallback_img; this._tried_to_load_fallback = true; } };
+
+
+			this.dom.fg_img.src = this.image_path;
+			this._tried_to_load_fallback = false;
+			this.dom.fg_img.onerror = () => { if (!this._tried_to_load_fallback) { this.dom.fg_img.src = this.fallback_img; this._tried_to_load_fallback = true; } };
+
 
 			if (this.caption == null) {
 				this.dom.caption_p.classList.add("hide");

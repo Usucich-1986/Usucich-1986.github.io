@@ -10,7 +10,15 @@ const MAIN_CONFIG = {
 		"/knot/2/config.json", 
 		"/knot/3/config.json", 
 		"/knot/4/config.json",
-		"/knot/5/config.json"
+		"/knot/5/config.json",
+		"/knot/5/config.json",
+		"/knot/5/config.json",
+		"/knot/5/config.json",
+		"/knot/5/config.json",
+		"/knot/5/config.json",
+		"/knot/5/config.json",
+		"/knot/5/config.json",
+		"/knot/5/config.json",
 	]
 };
 
