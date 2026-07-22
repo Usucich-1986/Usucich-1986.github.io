@@ -1,0 +1,231 @@
+html,
+body {
+	overflow: hidden;
+	overscroll-behavior-x: none;
+	padding: 0;
+	margin: 0;
+	font-family: "Nunito", Arial, Helvetica, sans-serif;
+	width: 100vw;
+	height: 100dvh;
+	background-color: rgb(37, 51, 63);
+	transition: none;
+}
+
+* {
+	font-family: inherit;
+	color: inherit;
+	box-sizing: border-box;
+}
+
+.app_root {
+	width: 100%;
+	height: 100%;
+}
+
+.page_container {
+	transition: none;
+	width: 100%;
+	height: 100%;
+
+	padding: 0;
+	margin: 0;
+	background-color: #596a6dbd;
+
+	display: grid;
+	grid-template-columns: 2fr 4fr;
+	grid-template-rows: 8% 90% 100%;
+	justify-content: space-evenly;
+	align-items: center;
+	justify-items: center;
+
+	scroll-snap-type: y mandatory;
+
+	overflow-x: hidden;
+	overflow-y: auto;
+	border-radius: inherit;
+
+	color: white;
+}
+
+.page_container>div {
+	scroll-snap-align: center;
+}
+
+/* title */
+
+.page_container>.page_title_container {
+	scroll-snap-align: start;
+	grid-column-start: 1;
+	grid-column-end: 3;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	position: relative;
+
+	background: linear-gradient(180deg, #0004, #fff0);
+}
+
+.page_container>.page_title_container>h1 {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin: 0;
+}
+
+
+/* video */
+
+.page_container>.page_video_container {
+	grid-column-start: 1;
+	grid-column-end: 3;
+	width: 100%;
+	height: 100%;
+	padding: 2vmin 2vmin;
+}
+
+.page_container>.page_video_container>video {
+	width: 100%;
+	height: 100%;
+	max-height: 85dvh;
+	border-radius: 2vmin;
+	object-fit: contain;
+	overflow: hidden;
+	box-shadow: #000 0 0 2vmin 0;
+	background-color: #000101cc;
+}
+
+/* descr */
+
+.page_container>.page_description_container {
+	background-color: #0005;
+	grid-column-start: 1;
+	grid-column-end: 2;
+	width: 95%;
+	height: 95%;
+	padding: 2vmin;
+	border-radius: 2vmin;
+	font-size: large;
+}
+
+@media screen and (max-aspect-ratio: 1) {
+	.page_container {
+		grid-template-columns: 1fr;
+		grid-template-rows: 8% auto auto 100%;
+	}
+
+	.page_container>.page_description_container {
+		grid-column-start: 1;
+		grid-column-end: 3;
+	}
+
+	.page_container>.page_photos_container {
+		grid-column-start: 1;
+		grid-column-end: 3;
+	}
+}
+
+/* Photos */
+
+.page_container>.page_photos_container {
+	width: 95%;
+	height: 95%;
+	border-radius: 1.5vmin;
+	box-shadow: #000 0 0 1vmin 0;
+	overflow: hidden;
+}
+
+.page_container>.page_photos_container .page_photo_container {
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+
+.page_container>.page_photos_container .page_photo_container>img {
+	transition: none;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	&.fg_img {
+		object-fit: contain;
+		z-index: 5;
+	}
+
+	&.bg_img {
+		image-rendering: pixelated;
+		object-fit: cover;
+		z-index: 1;
+	}
+}
+
+/* those 2 arent much affecting style. just during animation of scroll its visible that blur gone. */
+/* .c_slide_left_2, */
+/* .c_slide_right_2, */
+.c_slide_main,
+.c_slide_left,
+.c_slide_right {
+	&>.page_photo_container>img.bg_img {
+		filter: blur(1vmin);
+	}
+}
+
+.c_slide_left_2,
+.c_slide_right_2,
+.c_slide_hidden {
+	&>.page_photo_container>img.bg_img {
+		filter: none;
+	}
+}
+
+.page_container>.page_photos_container .page_photo_container>p {
+	display: block;
+	background-color: #000a;
+	padding: 0.5vmin 1.5vmin;
+	border-radius: 0.7vmin;
+	color: #e8e8e8;
+	position: absolute;
+	bottom: 5%;
+	left: 50%;
+	max-width: 80%;
+	width: fit-content;
+	margin: 0;
+	transform: translate(-50%, -50%);
+	text-align: center;
+	text-shadow: #aaa7 0 0 1vmin;
+	z-index: 10;
+}
+
+
+
+
+/* perfomance optimizations */
+.slow_device .page_container {
+	background-color: rgba(71, 94, 101, 0.99);
+	/* when enabled causes wrong render on mobile phones */
+}
+
+.slow_device .page_container .page_photo_container {
+	background-color: #222224;
+
+	&>img.bg_img {
+		display: none;
+	}
+
+	&>p {
+		background-color: #000;
+		text-shadow: none;
+		font-weight: 500;
+	}
+}
+
+.slow_device .page_container>.page_video_container>video {
+	background-color: #000101;
+	box-shadow: none;
+}
+
+.slow_device .page_container>.page_description_container {
+	background-color: rgb(35, 48, 55);
+}

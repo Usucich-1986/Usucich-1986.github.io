@@ -1,0 +1,27 @@
+{
+	"title": "Knot 4",
+	"video_name": "m.mp4",
+	"description": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eos totam labore quisquam odit est? Quaerat impedit sint doloremque sed nesciunt!",
+	"photos": [
+		{
+			"photo": "1.jpeg",
+			"caption": "caption for image with filename 1"
+		},
+		{
+			"photo": "2.jpeg",
+			"caption": "caption for image with filename 2"
+		},
+		{
+			"photo": "3.jpeg",
+			"caption": "caption for image with filename 2"
+		},
+		{
+			"photo": "4.jpeg",
+			"caption": "caption for image with filename 4"
+		},
+		{
+			"photo": "5.jpeg",
+			"caption": "caption for image with filename 5"
+		}
+	]
+}
