@@ -4,7 +4,6 @@ const MAIN_CONFIG = {
 	browser_tab_title_format: "${page_title} : Knots", // available vars: ["page_title", "time"]
 	fallback_img: "/src/media/no_image.jpg",
 	fallback_video: "/src/media/no_video.mp4",
-	// fallback_video: "./src/media/1.gif",
 	pages: [
 		"/knot/1/config.json", 
 		"/knot/2/config.json", 
@@ -19,6 +18,7 @@ const MAIN_CONFIG = {
 		"/knot/5/config.json",
 		"/knot/5/config.json",
 		"/knot/5/config.json",
+		"/knot/6/config.json",
 	]
 };
 
