@@ -13,7 +13,7 @@ class App {
 		this.load_complete = false;
 
 		this.dom = {
-			root: document.createElement("div"),
+			root: document.getElementById("app_container"),
 			carousel_container: this.carousel.get_parent_node()
 		};
 		this.dom.root.classList.add("app_root");
@@ -27,7 +27,16 @@ class App {
 				console.log("Mobile fast device. Using full effects");
 		}
 		this.dom.root.appendChild(this.dom.carousel_container);
-		document.body.appendChild(this.dom.root);
+
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        var page_index = parseInt(urlParams.get('index'));
+        console.info(`Url index: ${page_index}`);
+        page_index = isNaN(page_index) ? MAIN_CONFIG.deafult_page : page_index;
+        page_index = (0 <= page_index && page_index < MAIN_CONFIG.pages.length) ? page_index : MAIN_CONFIG.deafult_page;
+        page_index = (0 <= page_index && page_index < MAIN_CONFIG.pages.length) ?  page_index : 0;
+        console.info(`normalized index: ${page_index}`);
+        this.init_page_index = page_index;
 
 		if (auto_init) {
 			var auto_init_fn = async () => {
@@ -59,6 +68,7 @@ class App {
 				this.carousel.add_slide_dom(page.get_dom());
 				this.pages.push(page);
 			}
+            this.carousel.set_current_slide(this.init_page_index);
 			this.load_complete = true;
 		}
 	}

@@ -458,6 +458,10 @@ class Carousel {
 		this.c_slides.add_slide_dom(dom);
 	}
 
+    set_current_slide(index){
+        this.c_slides.set_current(index);
+    }
+
 	_create_dom(force = false) {
 		if (this.dom.root == undefined || force) {
 			this.dom.root = document.createElement("div");

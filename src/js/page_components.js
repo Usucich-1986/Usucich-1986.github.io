@@ -85,7 +85,7 @@ class PageTitle {
 
 		this.dom = {
 			root: undefined,
-			title_h1: undefined
+			title_a: undefined
 		};
 	}
 
@@ -95,8 +95,17 @@ class PageTitle {
 			this.dom.root.classList.add("page_title_container");
 			this.dom.root.id = `p${this.page.index}_title`;
 
-			this.dom.title_h1 = document.createElement("h1");
-			this.dom.root.appendChild(this.dom.title_h1);
+			this.dom.title_a = document.createElement("a");
+            const url = new URL(window.location.href);
+            url.searchParams.set('index', this.page.index);
+            this.dom.title_a.href = url.toString();
+            
+            this.dom.title_a.addEventListener('click', (function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                navigator.clipboard.writeText(this.dom.title_a.href);
+            }).bind(this));
+			this.dom.root.appendChild(this.dom.title_a);
 		}
 
 		this.update();
@@ -105,7 +114,7 @@ class PageTitle {
 
 	update() {
 		if (this.dom.root != undefined) {
-			this.dom.title_h1.innerHTML = this.title;
+			this.dom.title_a.innerHTML = this.title;
 		}
 	}
 }
