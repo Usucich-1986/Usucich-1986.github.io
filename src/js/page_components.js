@@ -24,7 +24,7 @@ class PageVideo {
 			this.dom.root.appendChild(this.dom.video);
 			this.dom.video.autoplay = false;
 			this.dom.video.controls = true;
-			this.dom.video.loading = "lazy";
+			this.dom.video.preload = "none";
 
 
 			this.dom.video_src_1 = document.createElement("source");
@@ -40,8 +40,8 @@ class PageVideo {
 
 	update() {
 		if (this.dom.root != undefined) {
-			this.dom.video_src_1.src = this.video_url;
-			this.dom.video_src_2.src = this.fallback_video;
+			this.dom.video_src_1.dataset.src = this.video_url;
+			this.dom.video_src_2.dataset.src = this.fallback_video;
 		}
 	}
 }
@@ -73,7 +73,7 @@ class PageDescription {
 
 	update() {
 		if (this.dom.root != undefined) {
-			this.dom.p.innerHTML = this.text;
+			this.dom.p.innerHTML = this.text ?? "";
 		}
 	}
 }
@@ -126,7 +126,8 @@ class PagePhoto {
 		this.image_path = image_path;
 		this.fallback_img = fallback_img;
 		this.caption = caption;
-		this._tried_to_load_fallback = false;
+		this._bg_fallback_used = false;
+		this._fg_fallback_used = false;
 
 		this.dom = {
 			root: undefined,
@@ -145,11 +146,16 @@ class PagePhoto {
 
 			this.dom.bg_img = document.createElement("img");
 			this.dom.bg_img.loading = "lazy";
+			this.dom.bg_img.decoding = "async";
+			this.dom.bg_img.alt = "";
+			this.dom.bg_img.setAttribute("aria-hidden", "true");
 			this.dom.bg_img.classList.add("bg_img");
 			this.dom.root.appendChild(this.dom.bg_img);
 
 			this.dom.fg_img = document.createElement("img");
 			this.dom.fg_img.loading = "lazy";
+			this.dom.fg_img.decoding = "async";
+			this.dom.fg_img.alt = "";
 			this.dom.fg_img.classList.add("fg_img")
 			this.dom.root.appendChild(this.dom.fg_img);
 
@@ -163,15 +169,25 @@ class PagePhoto {
 
 	update() {
 		if (this.dom.root != undefined) {
-			this.dom.bg_img.src = this.image_path;
-			this._tried_to_load_fallback = false;
-			this.dom.bg_img.onerror = () => { if (!this._tried_to_load_fallback) { this.dom.bg_img.src = this.fallback_img; this._tried_to_load_fallback = true; } };
+			const caption_text = this.caption ?? `Photo ${this.index + 1}`;
+			this.dom.bg_img.dataset.src = this.image_path;
+			this._bg_fallback_used = false;
+			this.dom.bg_img.onerror = () => {
+				if (!this._bg_fallback_used) {
+					this.dom.bg_img.src = this.fallback_img;
+					this._bg_fallback_used = true;
+				}
+			};
 
-
-			this.dom.fg_img.src = this.image_path;
-			this._tried_to_load_fallback = false;
-			this.dom.fg_img.onerror = () => { if (!this._tried_to_load_fallback) { this.dom.fg_img.src = this.fallback_img; this._tried_to_load_fallback = true; } };
-
+			this.dom.fg_img.dataset.src = this.image_path;
+			this.dom.fg_img.alt = caption_text;
+			this._fg_fallback_used = false;
+			this.dom.fg_img.onerror = () => {
+				if (!this._fg_fallback_used) {
+					this.dom.fg_img.src = this.fallback_img;
+					this._fg_fallback_used = true;
+				}
+			};
 
 			if (this.caption == null) {
 				this.dom.caption_p.classList.add("hide");

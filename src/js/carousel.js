@@ -1,3 +1,23 @@
+function load_slide_media(slide_dom, include_video) {
+	for (const element of slide_dom.querySelectorAll("img[data-src]")) {
+		element.src = element.dataset.src;
+		element.removeAttribute("data-src");
+	}
+
+	if (include_video) {
+		for (const video of slide_dom.querySelectorAll("video")) {
+			let source_loaded = false;
+			for (const source of video.querySelectorAll("[data-src]")) {
+				source.src = source.dataset.src;
+				source.removeAttribute("data-src");
+				source_loaded = true;
+			}
+			if (source_loaded)
+				video.load();
+		}
+	}
+}
+
 class C_Slides {
 	constructor() {
 		this.c_slide_objs = [];
@@ -16,8 +36,11 @@ class C_Slides {
 
 	add_slide_dom(inner_dom) {
 		this.c_slide_objs.push(new C_Slide(this, this.c_slide_objs.length, inner_dom));
-		this.set_current(0);
 		this._dom.appendChild(this.c_slide_objs[this.c_slide_objs.length - 1].get_dom());
+		if (this._current == -1)
+			this.set_current(0);
+		else
+			this.set_current(this._current, true);
 		this._update_timeline();
 	}
 
@@ -31,17 +54,19 @@ class C_Slides {
 	}
 
 
-	set_current(index) {
+	set_current(index, force_refresh = false) {
 		var rm_class = (i, pclass) => {
 			this.c_slide_objs[i].get_dom().classList.remove(pclass);
 			this.c_slide_objs[i].get_dom().classList.add("c_slide_hidden");
 			this.c_slide_objs[i].get_dom().inert = true;
 		};
 		var add_class = (i, pclass) => {
-			this.c_slide_objs[i].get_dom().classList.remove("c_slide_hidden");
-			this.c_slide_objs[i].get_dom().classList.add(pclass);
+			const slide_dom = this.c_slide_objs[i].get_dom();
+			slide_dom.classList.remove("c_slide_hidden");
+			slide_dom.classList.add(pclass);
+			load_slide_media(slide_dom, pclass == "c_slide_main");
 			if (pclass == "c_slide_main")
-				this.c_slide_objs[i].get_dom().inert = false;
+				slide_dom.inert = false;
 		};
 		var rm_all_c = (i) => {
 			var cl = this.c_slide_objs[i].get_dom().classList;
@@ -56,6 +81,8 @@ class C_Slides {
 		var il = (ind) => (ind + slides_count) % slides_count;
 
 		var slides_count = this.c_slide_objs.length;
+		if (slides_count == 0)
+			return;
 
 		var jump_to = (i) => {
 			var l = il(i - 1), l2 = il(i - 2),
@@ -117,10 +144,17 @@ class C_Slides {
 
 		// actual logic
 		index = il(index);
-		if (slides_count != 0) {
-			if ((0 <= index) && (index < slides_count)) {
-				// jump_to(index);
-				var dif = index - this._current;
+		if (index != this._current || force_refresh) {
+			if (this._current == -1) {
+				jump_to(index);
+			} else {
+				const direct_diff = index - this._current;
+				const forward_diff = il(direct_diff);
+				const backward_diff = forward_diff - slides_count;
+				const dif = Math.abs(forward_diff) <= Math.abs(backward_diff)
+					? forward_diff
+					: backward_diff;
+
 				if (Math.abs(dif) != 1 || slides_count < 6)
 					jump_to(index);
 				else
