@@ -1,5 +1,5 @@
 const MAIN_CONFIG = {
-	deafult_page: 1,
+	deafult_page: 0,
 	default_color_scheme: "light", // "light" / "dark"
 	browser_tab_title_format: "${page_title} : Knots", // available vars: ["page_title", "time"]
 	fallback_img: "/src/media/no_image.jpg",
@@ -7,18 +7,7 @@ const MAIN_CONFIG = {
 	// fallback_video: "./src/media/1.gif",
 	pages: [
 		"/knot/1/config.json", 
-		"/knot/2/config.json", 
-		"/knot/3/config.json", 
-		"/knot/4/config.json",
-		"/knot/5/config.json",
-		"/knot/5/config.json",
-		"/knot/5/config.json",
-		"/knot/5/config.json",
-		"/knot/5/config.json",
-		"/knot/5/config.json",
-		"/knot/5/config.json",
-		"/knot/5/config.json",
-		"/knot/5/config.json"
+		"/knot/2/config.json"
 	]
 };
 
