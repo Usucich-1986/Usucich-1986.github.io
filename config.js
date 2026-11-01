@@ -7,7 +7,11 @@ const MAIN_CONFIG = {
 	// fallback_video: "./src/media/1.gif",
 	pages: [
 		"/knot/1/config.json", 
-		"/knot/2/config.json"
+		"/knot/2/config.json",
+		"/knot/3/config.json",
+		"/knot/4/config.json",
+		"/knot/5/config.json",
+		"/knot/6/config.json"
 	]
 };
 
