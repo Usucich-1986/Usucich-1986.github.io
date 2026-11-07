@@ -33,7 +33,7 @@
 
 	display: grid;
 	grid-template-columns: 2fr 4fr;
-	grid-template-rows: 8% 90% 100%;
+	grid-template-rows: 8% 92% 100%;
 	justify-content: space-evenly;
 	align-items: center;
 	justify-items: center;
@@ -81,6 +81,7 @@
 	margin: 0.75vmin 0;
 	text-shadow: 0 0.2rem 1.2rem rgba(0, 0, 0, 0.35);
 	transition: color 160ms ease, text-shadow 160ms ease;
+	text-wrap: nowrap;
 }
 
 .page_container>.page_title_container>a:hover,
@@ -137,7 +138,7 @@
 @media screen and (max-aspect-ratio: 1) {
 	.page_container {
 		grid-template-columns: 1fr;
-		grid-template-rows: 8% auto auto 100%;
+		grid-template-rows: 8% 92% auto 100%;
 	}
 
 	.page_container>.page_description_container {
