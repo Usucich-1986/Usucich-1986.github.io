@@ -1,10 +1,12 @@
 import { Carousel } from "./carousel.js";
 
 class PageVideo {
-	constructor(page, video_url, fallback_video) {
+	constructor(page, video_url, fallback_video, loop = false, muted = false) {
 		this.page = page;
 		this.video_url = video_url;
 		this.fallback_video = fallback_video;
+		this.loop = loop;
+		this.muted = muted;
 
 		this.dom = {
 			root: undefined,
@@ -23,6 +25,9 @@ class PageVideo {
 			this.dom.video = document.createElement("video");
 			this.dom.root.appendChild(this.dom.video);
 			this.dom.video.autoplay = false;
+			this.dom.video.loop = false;
+			this.dom.video.playsinline = true;
+			this.dom.muted = false;
 			this.dom.video.controls = true;
 			this.dom.video.preload = "none";
 
@@ -42,6 +47,8 @@ class PageVideo {
 		if (this.dom.root != undefined) {
 			this.dom.video_src_1.dataset.src = this.video_url;
 			this.dom.video_src_2.dataset.src = this.fallback_video;
+			this.dom.video.loop = this.loop;
+			this.dom.video.muted = this.muted;
 		}
 	}
 }
