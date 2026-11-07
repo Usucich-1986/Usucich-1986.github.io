@@ -20,7 +20,7 @@ class App {
 
 		if (isMobileDevice() || true) {
 			const isDS = isDeviceSlow();
-			if (isDeviceSlow()) {// micro benchmark
+			if (isDS) {// micro benchmark
 				this.dom.root.classList.add("slow_device");
 				console.warn("Mobile SLOW device. Using simple effects.");
 			} else
