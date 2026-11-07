@@ -204,7 +204,7 @@ class PagePhotos {
 	constructor(page, data, path_prefix, fallback_img) {
 		this.page = page;
 		this.fallback_img = fallback_img;
-		this.carousel = new Carousel(true, true);
+		this.carousel = new Carousel(true, false, true);
 
 		this.page_photo_objs = [];
 		for (let i = 0; i < data.length; i++)

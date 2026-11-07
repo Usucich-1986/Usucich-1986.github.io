@@ -216,9 +216,10 @@ class C_Slide {
 }
 
 class C_Controls {
-	constructor(c_slides_obj) {
+	constructor(c_slides_obj, stop_media_on_slide = false) {
 		this.c_slides = c_slides_obj;
 		this.event_listeners = [];
+		this.stop_media_on_slide = stop_media_on_slide;
 
 		this._dom = {
 			root: document.createElement("div"),
@@ -250,10 +251,14 @@ class C_Controls {
 
 	_next() {
 		this.c_slides.next();
+		if (this.stop_media_on_slide)
+			stopAllMedia(true);
 	}
 
 	_prev() {
 		this.c_slides.prev();
+		if (this.stop_media_on_slide)
+			stopAllMedia(true);
 	}
 
 	_event_parser(e) {
@@ -482,6 +487,7 @@ class CarouselContainer {
 class Carousel {
 	constructor(
 		show_controls = true,
+		stop_media_on_slide_change = false,
 		show_timeline = true,
 		style = undefined,
 		parent = undefined,
@@ -491,7 +497,7 @@ class Carousel {
 
 		this.c_slides = new C_Slides();
 		this.c_timeline = show_timeline ? new C_Timeline(this.c_slides) : undefined;
-		this.c_controls = show_controls ? new C_Controls(this.c_slides) : undefined;
+		this.c_controls = show_controls ? new C_Controls(this.c_slides, stop_media_on_slide_change) : undefined;
 
 		this.dom = {
 			root: undefined,

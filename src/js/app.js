@@ -9,7 +9,7 @@ class App {
 		this.notify = new NotificationSystem("bottom-right");
 		this.pages = [];
 		this.glide_obj = undefined;
-		this.carousel = new Carousel(true, false, {
+		this.carousel = new Carousel(true, true, false, {
 			scroll_vertical: true
 		});
 		this.load_complete = false;

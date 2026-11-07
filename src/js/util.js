@@ -53,3 +53,22 @@ function isDeviceSlow() {
 	// passed
 	return false;
 }
+
+
+/**
+ * Stops and resets all audio and video elements on the page.
+ * @param {boolean} eager - If true, aggressively clears sources and reloads to free up memory/buffers.
+ */
+function stopAllMedia(reset_current_time = false) {
+  const mediaElements = document.querySelectorAll('video, audio');
+
+  mediaElements.forEach(media => {
+    try {
+      media.pause();
+	  if (reset_current_time)
+      	media.currentTime = 0;
+    } catch (err) {
+      console.warn('Error while stopping media element:', err);
+    }
+  });
+}
