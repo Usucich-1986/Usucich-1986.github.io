@@ -13,6 +13,7 @@ export class Page {
 			MAIN_CONFIG.fallback_video,
 			config.loop != undefined ? config.loop : MAIN_CONFIG.default_video_loop,
 			config.muted != undefined ? config.muted : MAIN_CONFIG.default_video_muted,
+			config.unmute_on_fullscreen != undefined ? config.unmute_on_fullscreen : MAIN_CONFIG.default_video_unmute_on_fullscreen,
 		);
 		this.photos = new PagePhotos(this, config.photos, page_folder_path + '/src', MAIN_CONFIG.fallback_img);
 		this.description = new PageDescription(this, config.description);

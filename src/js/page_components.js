@@ -1,12 +1,13 @@
 import { Carousel } from "./carousel.js";
 
 class PageVideo {
-	constructor(page, video_url, fallback_video, loop = false, muted = false) {
+	constructor(page, video_url, fallback_video, loop = false, muted = false, unmute_on_fullscreen = false) {
 		this.page = page;
 		this.video_url = video_url;
 		this.fallback_video = fallback_video;
 		this.loop = loop;
 		this.muted = muted;
+		this.unmute_on_fullscreen = unmute_on_fullscreen;
 
 		this.dom = {
 			root: undefined,
@@ -14,6 +15,16 @@ class PageVideo {
 			video_src_1: undefined,
 			video_src_2: undefined
 		};
+	}
+
+	_fulscreen_change_handler(){
+		const isFullscreen = document.fullscreenElement || 
+			document.webkitFullscreenElement || 
+			document.msFullscreenElement;
+
+		if (isFullscreen === this.dom.video) {
+			this.dom.video.muted = false;
+		}
 	}
 
 	get_dom(force_recreate) {
@@ -31,6 +42,12 @@ class PageVideo {
 			this.dom.video.controls = true;
 			this.dom.video.preload = "none";
 
+			if (this.unmute_on_fullscreen)
+			{
+				document.addEventListener('fullscreenchange', this._fulscreen_change_handler.bind(this));
+				document.addEventListener('webkitfullscreenchange', this._fulscreen_change_handler.bind(this));
+				document.addEventListener('msfullscreenchange', this._fulscreen_change_handler.bind(this));
+			}
 
 			this.dom.video_src_1 = document.createElement("source");
 			this.dom.video.appendChild(this.dom.video_src_1);
