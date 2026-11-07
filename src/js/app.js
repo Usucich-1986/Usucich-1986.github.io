@@ -1,10 +1,12 @@
 import MAIN_CONFIG from "../../config.js";
 import { Carousel } from "./carousel.js";
 import { Page } from "./page.js";
+import { NotificationSystem } from "./notify.js";
 
 
 class App {
 	constructor(auto_init = true) {
+		this.notify = new NotificationSystem("bottom-right");
 		this.pages = [];
 		this.glide_obj = undefined;
 		this.carousel = new Carousel(true, false, {

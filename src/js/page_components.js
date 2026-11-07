@@ -104,6 +104,7 @@ class PageTitle {
                 event.preventDefault();
                 event.stopPropagation();
                 navigator.clipboard.writeText(this.dom.title_a.href);
+				window.app?.notify?.show("Հղումը պատճենված է", "info", 1200);
             }).bind(this));
 			this.dom.root.appendChild(this.dom.title_a);
 		}
