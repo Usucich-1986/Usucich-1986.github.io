@@ -1,3 +1,5 @@
+const LB_DO_5_SLIDES = false;
+
 function load_slide_media(slide_dom, include_video) {
 	for (const element of slide_dom.querySelectorAll("img[data-src]")) {
 		element.src = element.dataset.src;
@@ -72,9 +74,11 @@ class C_Slides {
 			var cl = this.c_slide_objs[i].get_dom().classList;
 			cl.remove("c_slide_main");
 			cl.remove("c_slide_left");
-			cl.remove("c_slide_left_2");
+			if (LB_DO_5_SLIDES)
+				cl.remove("c_slide_left_2");
 			cl.remove("c_slide_right");
-			cl.remove("c_slide_right_2");
+			if (LB_DO_5_SLIDES)
+				cl.remove("c_slide_right_2");
 			cl.add("c_slide_hidden");
 			this.c_slide_objs[i].get_dom().inert = true;
 		};
@@ -85,8 +89,12 @@ class C_Slides {
 			return;
 
 		var jump_to = (i) => {
-			var l = il(i - 1), l2 = il(i - 2),
-				r = il(i + 1), r2 = il(i + 2);
+			if (LB_DO_5_SLIDES)
+				var l = il(i - 1), l2 = il(i - 2),
+					r = il(i + 1), r2 = il(i + 2);
+			else
+				var l = il(i - 1),
+					r = il(i + 1);
 			for (const j in this.c_slide_objs)
 				rm_all_c(j);
 
@@ -108,7 +116,7 @@ class C_Slides {
 				add_class(r, "c_slide_right");
 				return;
 			}
-			if (slides_count == 4) {
+			if (LB_DO_5_SLIDES && slides_count == 4) {
 				add_class(i, "c_slide_main");
 				add_class(l, "c_slide_left");
 				add_class(r, "c_slide_right");
@@ -118,19 +126,29 @@ class C_Slides {
 			}
 			add_class(i, "c_slide_main");
 			add_class(l, "c_slide_left");
-			add_class(l2, "c_slide_left_2");
+			if (LB_DO_5_SLIDES)
+				add_class(l2, "c_slide_left_2");
 			add_class(r, "c_slide_right");
-			add_class(r2, "c_slide_right_2");
+			if (LB_DO_5_SLIDES)
+				add_class(r2, "c_slide_right_2");
 		};
 
 		var cylce_current = (dir = 1) => {
 			// right -> 1
 			// left -> -1
 			// works for +=6 elements
-			if (slides_count < 6) return;
-			var classes_t = ["c_slide_left_2", "c_slide_left", "c_slide_main", "c_slide_right", "c_slide_right_2"];
-			var i = il(this._current + 2 * dir),
-				j = 2 * (dir + 1);
+			if (LB_DO_5_SLIDES)
+			{
+				if (slides_count < 6) return;
+				var classes_t = ["c_slide_left_2", "c_slide_left", "c_slide_main", "c_slide_right", "c_slide_right_2"];
+				var i = il(this._current + 2 * dir),
+					j = 2 * (dir + 1);
+			} else {
+				if (slides_count < 4) return;
+				var classes_t = ["c_slide_left", "c_slide_main", "c_slide_right"];
+				var i = il(this._current + 1 * dir),
+					j = 1 * (dir + 1);
+			}
 			// max_i = il(this._current - 2 * dir),
 			do {
 				rm_class(i, classes_t[j]);
@@ -138,7 +156,8 @@ class C_Slides {
 
 				i = il(i - dir);
 				j -= dir;
-			} while (j != -1 && j != 5);
+			} while (j != -1 && j != (1 + (LB_DO_5_SLIDES ? 2 : 1) * 2));
+			// } while (j != -1 && j != (1 + 2 * 2)); // original for 5 slides
 		}
 
 
@@ -155,7 +174,8 @@ class C_Slides {
 					? forward_diff
 					: backward_diff;
 
-				if (Math.abs(dif) != 1 || slides_count < 6)
+				// if (Math.abs(dif) != 1 || slides_count < 6) // original code for 5 slides
+				if (Math.abs(dif) != 1 || slides_count < (LB_DO_5_SLIDES ? 6 : 4))
 					jump_to(index);
 				else
 					cylce_current(dif);
