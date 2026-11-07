@@ -1,4 +1,4 @@
-const LB_DO_5_SLIDES = false;
+const LB_DO_5_SLIDES = true;
 
 function load_slide_media(slide_dom, include_video) {
 	for (const element of slide_dom.querySelectorAll("img[data-src]")) {
