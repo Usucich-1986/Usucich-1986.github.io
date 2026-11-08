@@ -36,8 +36,8 @@ class C_Slides {
 			this.c_timeline.set_current_i_of_n(this._current, this.c_slide_objs.length);
 	}
 
-	add_slide_dom(inner_dom) {
-		this.c_slide_objs.push(new C_Slide(this, this.c_slide_objs.length, inner_dom));
+	add_slide_dom(inner_dom, title_text) {
+		this.c_slide_objs.push(new C_Slide(this, this.c_slide_objs.length, inner_dom, title_text));
 		this._dom.appendChild(this.c_slide_objs[this.c_slide_objs.length - 1].get_dom());
 		if (this._current == -1)
 			this.set_current(0);
@@ -68,7 +68,10 @@ class C_Slides {
 			slide_dom.classList.add(pclass);
 			load_slide_media(slide_dom, pclass == "c_slide_main");
 			if (pclass == "c_slide_main")
+			{
 				slide_dom.inert = false;
+				this.c_slide_objs[i].become_main();
+			}
 		};
 		var rm_all_c = (i) => {
 			var cl = this.c_slide_objs[i].get_dom().classList;
@@ -196,10 +199,11 @@ class C_Slides {
 }
 
 class C_Slide {
-	constructor(c_slides_obj, slide_index, slide_inner_dom) {
+	constructor(c_slides_obj, slide_index, slide_inner_dom, title = "No Title") {
 		this.c_slide = c_slides_obj;
 		this.index = slide_index;
 		this._inner_dom = slide_inner_dom;
+		this.title_text = title;
 
 		this._dom = document.createElement("div");
 		this._dom.classList.add("c_slide");
@@ -212,6 +216,10 @@ class C_Slide {
 
 	get_dom() {
 		return this._dom;
+	}
+
+	become_main() {
+		set_page_title(this.title_text);
 	}
 }
 
@@ -514,8 +522,8 @@ class Carousel {
 			throw new Error("Invalid parent: " + this.parent);
 	}
 
-	add_slide_dom(dom) {
-		this.c_slides.add_slide_dom(dom);
+	add_slide_dom(dom, title_text) {
+		this.c_slides.add_slide_dom(dom, title_text);
 	}
 
     set_current_slide(index){

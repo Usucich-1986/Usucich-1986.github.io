@@ -1,13 +1,12 @@
 const MAIN_CONFIG = {
 	deafult_page: 0,
 	default_color_scheme: "light", // "light" / "dark"
-	browser_tab_title_format: "${page_title} : Knots", // available vars: ["page_title", "time"]
+	browser_tab_title_format: "{page_title} : Knots", // available vars: ["page_title"]
 	fallback_img: "/src/media/no_image.jpg",
 	fallback_video: "/src/media/no_video.mp4",
-	default_video_muted: true,
-	default_video_unmute_on_fullscreen: true,
+	default_video_muted: false,
+	default_video_unmute_on_fullscreen: false,
 	default_video_loop: true,
-	// fallback_video: "./src/media/1.gif",
 	pages: [
 		"/knot/1/config.json", 
 		"/knot/2/config.json",

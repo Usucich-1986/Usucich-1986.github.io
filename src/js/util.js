@@ -72,3 +72,13 @@ function stopAllMedia(reset_current_time = false) {
     }
   });
 }
+
+function set_page_title(new_title) {
+	var old_title = document.title;
+	document.title = new_title;
+	return old_title;
+}
+
+const format = (str, obj) => {
+  return str.replace(/{([^}]+)}/g, (match, key) => obj[key] !== undefined ? obj[key] : match);
+};
