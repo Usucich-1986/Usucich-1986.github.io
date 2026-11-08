@@ -67,7 +67,11 @@ class App {
 				page_path = page_path.join("/");
 
 				page = new Page(i, config, page_path);
-				this.carousel.add_slide_dom(page.get_dom());
+				var title_text = MAIN_CONFIG.browser_tab_title_format;
+				title_text = format(title_text, {
+					page_title: config.title ? config.title : "-"
+				});
+				this.carousel.add_slide_dom(page.get_dom(), title_text);
 				this.pages.push(page);
 			}
             this.carousel.set_current_slide(this.init_page_index);
